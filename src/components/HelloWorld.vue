@@ -2,6 +2,7 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
+    <i class="iconfont icon-yingxiaoguanli">ffffff</i>
     <ul>
       <li>
         <a
@@ -45,6 +46,7 @@
         </a>
       </li>
     </ul>
+    <el-button type="primary">主要按钮</el-button>
     <h2>Ecosystem</h2>
     <ul>
       <li>
