@@ -48,7 +48,7 @@ const leftMenu = [
       },
       {
         link:'/sellManage/prove',
-        name:'单证管理'
+        name:''
       }
     ]
   }

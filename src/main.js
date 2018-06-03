@@ -14,6 +14,9 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 //使用UI库
 Vue.use(ElementUI);
+//注册全局组件
+import './components/common/index.js';
+
 Vue.config.productionTip = false;
 /* eslint-disable no-new */
 new Vue({
