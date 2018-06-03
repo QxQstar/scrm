@@ -39,7 +39,9 @@
             </template>
           </el-menu>
         </div>
-        <div class="g-main"></div>
+        <div class="g-main" :class="{bigger:isCollapse}">
+          <router-view></router-view>
+        </div>
       </div>
     </div>
 </template>
