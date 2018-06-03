@@ -20,18 +20,19 @@
           <!--导航-->
           <el-menu :default-active="current" :default-openeds='open' class="menu-list" @select='handleSelect' @open="handleOpen" @close="handleClose" :collapse="isCollapse">
             <template v-for="menu,index in leftMenu">
-              <el-menu-item :index="index + ''" v-if="!menu.children">
+              <el-menu-item :index="index + ''" v-if="!menu.children" @click.native="changeRouter(menu)">
                 <i :class="menu.icon"></i>
                 <span slot="title">{{menu.name}}</span>
               </el-menu-item>
               <el-submenu :index="index + ''"
-                          :class="{current:current.split('-')[0] + ''=== index + ''}" v-else>
+                          :class="{current:currentArr[0] + ''=== index + ''}" v-else>
                 <template slot="title">
                   <i :class="menu.icon"></i>
                   <span slot="title">{{menu.name}}</span>
                 </template>
                 <el-menu-item-group >
                   <el-menu-item v-for="subMenu,subIndex in menu.children"
+                                @click.native="changeRouter(subMenu)"
                                 :index="index + '-' + subIndex"
                                 :key="index + '-' + subIndex">{{subMenu.name}}</el-menu-item>
                 </el-menu-item-group>
@@ -59,10 +60,28 @@
         open:['1']
       }
     },
+    computed:{
+      currentArr(){
+        return this.current.split('-');
+      }
+    },
     methods:{
+      changeRouter(menu){
+        if(!menu){
+         const i = 0;
+          const find = (i,obj = this.leftMenu) => {
+            const index = this.currentArr[i] * 1 || 0;
+            if(!this.leftMenu[index].children) return obj[i];
+            else return find(i+1,this.leftMenu[index].children);
+          };
+          menu = find(i);
+        }
+        this.$router.push(menu.link || '/');
+      },
       //展开sub-menu选中第一项
       handleOpen(index){
         this.current = index + '-0';
+        this.changeRouter();
       },
       handleClose(){
         // todo

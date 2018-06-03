@@ -27,28 +27,28 @@ const leftMenu = [
     icon:'iconfont icon-gaiicon-',
     children:[
       {
-        link:'/',
+        link:'/sellManage/contact',
         name:'联系人管理'
       },
       {
-        link:'/',
+        link:'/sellManage/client',
         name:'客户管理'
       },
       {
-        link:'/',
+        link:'/sellManage/visit',
         name:'访客管理'
       },
       {
-        link:'/',
+        link:'/sellManage/transaction',
         name:'交易管理'
       },
       {
-        link:'/',
+        link:'/sellManage/product',
         name:'产品库'
       },
       {
-        link:'/',
-        name:'单证中心'
+        link:'/sellManage/prove',
+        name:'单证管理'
       }
     ]
   }
