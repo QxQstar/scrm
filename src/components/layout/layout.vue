@@ -60,8 +60,8 @@
         topMenu:topMenu,
         leftMenu:leftMenu,
         isCollapse:false,
-        current:'1',
-        open:['1']
+        current:'0',
+        open:['0']
       }
     },
     computed:{
@@ -75,7 +75,7 @@
          const i = 0;
           const find = (i,obj = this.leftMenu) => {
             const index = this.currentArr[i] * 1 || 0;
-            if(!this.leftMenu[index].children) return obj[i];
+            if(!this.leftMenu[index].children) return obj[index];
             else return find(i+1,this.leftMenu[index].children);
           };
           menu = find(i);

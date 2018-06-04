@@ -5,8 +5,8 @@ export default {
   component:() => import(/* webpackChunkName: "sellManage" */'./index.vue'),
   children:[
     {
-      path:':state',
-      component:() => import(/* webpackChunkName: "sellManage" */'./list.vue'),
+      path:'contact/:page?',
+      component:() => import(/* webpackChunkName: "sellManage" */'./contact/index.vue'),
     }
   ]
 }

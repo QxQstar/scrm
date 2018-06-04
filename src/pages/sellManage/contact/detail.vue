@@ -1,10 +1,12 @@
 <template>
-  <router-view class="m-sellManage"></router-view>
+    <div class="m-sellManage-detail">
+      detail
+    </div>
 </template>
 
 <script>
     export default {
-        name: "sellManage"
+
     }
 </script>
 

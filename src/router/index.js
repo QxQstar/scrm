@@ -11,6 +11,7 @@ export default new Router({
     {
       path: '/',
       name: 'scrm',
+      redirect:'/home',
       component: layout,
       children:routerArr
     }
