@@ -112,3 +112,6 @@ export function getLifecycle(){
 export function getTag(){
   return tag;
 }
+export function getFollow(){
+  return follow;
+}

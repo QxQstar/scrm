@@ -14,7 +14,7 @@
 
 <script>
     import filterArea from './../components/filter-area.vue';
-    import {getTime,getStar,getLifecycle,getTag} from '@/dataCenter/salesManage/contact.js';
+    import {getTime,getStar,getLifecycle,getTag,getFollow} from '@/dataCenter/salesManage/contact.js';
     export default {
       data(){
         return {
@@ -37,7 +37,8 @@
           time:'',
           star:'',
           lifecycle:'',
-          tag:''
+          tag:'',
+          follow:''
         }
       },
       computed:{
@@ -46,7 +47,15 @@
             time:this.time,
             star:this.star,
             lifecycle:this.lifecycle,
-            tag:this.tag
+            tag:this.tag,
+            follow:this.follow,
+            workTime:[{
+              label:'工作时间',
+              value:1
+            },{
+              label:'非工作时间',
+              value:2
+            }]
           }
         }
       },
@@ -57,6 +66,7 @@
           this.star = getStar();
           this.lifecycle = getLifecycle();
           this.tag = getTag();
+          this.follow = getFollow();
         }
       },
       created(){

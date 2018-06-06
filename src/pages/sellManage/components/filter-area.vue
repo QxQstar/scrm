@@ -3,14 +3,24 @@
     <!--已选项-->
     <div class="select-filter" v-if="selected.length > 0">
       <span class="info">已选</span>
-      <span class="select-item" v-for="item,index in selected" :key="index" @click="chooseFilter('',item.filed)">
+      <span class="select-item" v-for="item,index in selected" :key="index" @click="chooseFilter('',item.filed,true)">
         {{item.showValue}}
       </span>
     </div>
     <template v-for="param in all_params">
       <!--高级筛选-->
-      <div class="filter-item filter-item-high"  :key="param.filed" v-if=" param.list && showFilterItem(param)">
-
+      <div class=" filter-item-high"  :key="param.filed" v-if=" param.list && showFilterItem(param)">
+        <span class="info ">高级选项</span>
+        <div class="option ">
+          <el-tabs type="border-card">
+            <el-tab-pane :label="item.label"
+                         v-for="item in param.list"
+                         :key="item.filed"
+                         v-if="!filterParam.highFilter[item.filed]">
+              <span class="item" v-for="data in filterData[item.filed]" @click="chooseFilter([data],item.filed,true)">{{data.label}}</span>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
       </div>
       <!--非高级筛选-->
       <div class="filter-item" v-if="!param.list && !filterParam[param.filed]">
@@ -105,12 +115,19 @@
         }
       },
       methods:{
-        chooseFilter(data,filed){
-          this.filterParam[filed] = data;
+        chooseFilter(data,filed,is_higher){
+          if(is_higher){
+            this.filterParam.highFilter[filed] = data;
+          } else {
+            this.filterParam[filed] = data;
+          }
+
           this.$emit('on-change',this.filterParam);
         },
         showFilterItem(){
-          return false;
+          const highFilter = this.filterParam.highFilter,keys = Object.keys(highFilter);
+          //在高级选项中只要存在一个选项未选就要显示高级选项
+          return keys.some(key => !highFilter[key]);
         }
       }
     }
@@ -146,7 +163,7 @@
         .filter-cell{
           display: table-cell;
           padding: 10px 0;
-          vertical-align: text-top;
+          vertical-align: top;
           border-bottom: 1px solid #ebebeb;
         }
         .info{
@@ -164,6 +181,56 @@
             cursor: pointer;
           }
         }
+      }
+    }
+    .filter-item-high{
+      position: relative;
+      &>.info{
+        position: absolute;
+        top:5px;
+        left: 20px;
+        color: #8899a6;
+      }
+      &>.option{
+        margin-top: 5px;
+        .item{
+          margin-right: 10px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+</style>
+<style lang="less">
+  .m-filter-area{
+    .option {
+      .el-tabs--border-card{
+        box-shadow: none;
+        border-left: none;
+        border-top: none;
+        border-bottom: none;
+        .el-tabs__item{
+          margin: 0;
+          font-size: 12px;
+          height: 31px;
+          line-height: 31px;
+          color: #262626;
+          &:hover{
+            color: #262626;
+          }
+        }
+        .el-tabs__nav{
+          margin-top: 1px;
+          font-size: 12px;
+          .is-active{
+            border-top: 1px solid #ebebeb;
+            color: #262626;
+          }
+        }
+      }
+      .el-tabs--border-card>.el-tabs__header{
+        padding-left: 80px;
+        background-color: transparent;
       }
     }
   }
