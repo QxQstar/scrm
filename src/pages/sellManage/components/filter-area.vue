@@ -3,7 +3,7 @@
     <!--已选项-->
     <div class="select-filter" v-if="selected.length > 0">
       <span class="info">已选</span>
-      <span class="select-item" v-for="item,index in selected" :key="index" @click="chooseFilter('',item.filed,true)">
+      <span class="select-item" v-for="item,index in selected" :key="index" @click="chooseFilter('',item.filed,item.is_higher)">
         {{item.showValue}}
       </span>
     </div>
@@ -12,12 +12,15 @@
       <div class=" filter-item-high"  :key="param.filed" v-if=" param.list && showFilterItem(param)">
         <span class="info ">高级选项</span>
         <div class="option ">
-          <el-tabs type="border-card">
+          <el-tabs type="border-card" :value="activeName">
             <el-tab-pane :label="item.label"
-                         v-for="item in param.list"
+                         v-for="item,index in param.list"
+                         :name="index + ''"
                          :key="item.filed"
                          v-if="!filterParam.highFilter[item.filed]">
-              <span class="item" v-for="data in filterData[item.filed]" @click="chooseFilter([data],item.filed,true)">{{data.label}}</span>
+              <span class="item" v-for="data in filterData[item.filed]" @click="chooseFilter([data],item.filed,true);changeActive(index,param.list.length)">
+                {{data.label}}
+              </span>
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -62,8 +65,8 @@
       },
       data(){
         return{
-          time:'',
-
+          //高级选项中选中的项
+          activeName:'0',
         }
       },
       computed:{
@@ -88,17 +91,17 @@
           const is_object = (data) => {
             return Object.prototype.toString.call(data) === "[object Object]";
           };
-          const result = [], fn = (obj,parentFiled = '') => {
+          const result = [], fn = (obj,is_higher = false) => {
             const keys = Object.keys(obj),len = keys.length;
             for(let i = 0; i < len ; i++){
               const key = keys[i], item = obj[key];
               if(item){
                 if(is_object(item)){
-                  fn(item,key);
+                  fn(item,true);
                 } else {
                   const filterItem = {
                     filed:key,
-                    parentFiled:parentFiled,
+                    is_higher:is_higher,
                     showValue:[]
                   };
                   item.forEach(data => {
@@ -115,6 +118,13 @@
         }
       },
       methods:{
+        changeActive(index,length){
+          if(index * 1 + 1 < length){
+            this.activeName = index + 1 + '';
+          } else {
+            this.activeName = index - 1 + '';
+          }
+        },
         chooseFilter(data,filed,is_higher){
           if(is_higher){
             this.filterParam.highFilter[filed] = data;

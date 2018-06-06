@@ -55,6 +55,10 @@
             },{
               label:'非工作时间',
               value:2
+            }],
+            country:[{
+              value:1,
+              label:'中国'
             }]
           }
         }
