@@ -8,7 +8,12 @@
       </div>
     </div>
     <!--筛选区域-->
-    <filter-area v-model="filterParam" type='contact' :filterData="filterData"/>
+    <filter-area v-model="filterParam"
+                 type='contact'
+                 :config="{
+                    multiple:'star,lifecycle,tag'
+                  }"
+                 :filterData="filterData"/>
   </div>
 </template>
 

@@ -30,7 +30,34 @@
         <div class="filter-row">
           <span class="info filter-cell">{{param.label}}</span>
           <div class="option filter-cell">
-            <span v-for="item in filterData[param.filed]" :key="item.value" class="item" @click="chooseFilter([item],param.filed)">{{item.label}}</span>
+            <div class="opt-list">
+              <!-- 单选 -->
+              <template v-if="!(selectState[param.filed] || {}).state">
+                <span v-for="item in filterData[param.filed]"
+                  :key="item.value" class="item"
+                  @click="chooseFilter([item],param.filed)">
+                    {{item.label}}
+                </span>
+              </template>
+
+              <!-- 多选 -->
+              <template v-else>
+                <el-checkbox-group v-model="selectState[param.filed].opt">
+                  <el-checkbox :label="item.value"
+                               :key="item.value"
+                               v-for="item in filterData[param.filed]">{{item.label}}</el-checkbox>
+                </el-checkbox-group>
+                <div class="handle">
+                  <el-button size="mini" @click.native="changeSelectState(param.filed)">取消</el-button>
+                  <el-button size="mini" :disabled='selectState[param.filed].opt.length <= 0' @click.native="sureMultiple(param.filed)">确定</el-button>
+                </div>
+              </template>
+
+            </div>
+            <div class="btn-group">
+              <el-button size="mini" v-if="config.multiple.indexOf(param.filed) > -1 && !selectState[param.filed].state"
+                         @click.native="changeSelectState(param.filed)">多选</el-button>
+            </div>
           </div>
         </div>
       </div>
@@ -39,7 +66,10 @@
 </template>
 
 <script>
+    import ElButton from "element-ui/packages/button/src/button";
+
     export default {
+      components: {ElButton},
       model: {
         prop: 'filterParam',
         event: 'on-change'
@@ -49,14 +79,21 @@
           type:String,
           default:'contact'
         },
-        //筛选参数
+        //已选择的筛选项
         filterParam:{
           type:Object,
           default(){
             return {}
           }
         },
+        //筛选项
         filterData:{
+          type:Object,
+          default(){
+            return {}
+          }
+        },
+        config:{
           type:Object,
           default(){
             return {}
@@ -67,6 +104,7 @@
         return{
           //高级选项中选中的项
           activeName:'0',
+          selectState:{}
         }
       },
       computed:{
@@ -138,7 +176,34 @@
           const highFilter = this.filterParam.highFilter,keys = Object.keys(highFilter);
           //在高级选项中只要存在一个选项未选就要显示高级选项
           return keys.some(key => !highFilter[key]);
+        },
+        initData(){
+          const multiple = (this.config.multiple || '').split(',');
+          const obj = {};
+          multiple.forEach(item => {
+            obj[item] = {
+              state:false,// 是否是多选
+              opt:[]// 当为多选时，选中的项
+            }
+          });
+          this.selectState = obj;
+        },
+        //多选或者取消多选
+        changeSelectState(filed){
+          this.selectState[filed].opt = [];
+          this.selectState[filed].state = !this.selectState[filed].state;
+        },
+        //确定多选
+        sureMultiple(filed){
+          const opt = this.selectState[filed].opt.map(value => {
+            return this.filterData[filed].find(item => item.value * 1 === value * 1);
+          });
+          this.chooseFilter(opt,filed);
+          this.changeSelectState(filed);
         }
+      },
+      created(){
+        this.initData();
       }
     }
 </script>
@@ -170,6 +235,7 @@
       table-layout: fixed;
       .filter-row{
         display: table-row;
+        position: relative;
         .filter-cell{
           display: table-cell;
           padding: 10px 0;
@@ -184,12 +250,29 @@
           color: #8899a6;
         }
         .option{
+          .opt-list{
+            float: left;
+            width: 100%;
+            margin-right: -150px;
+            padding-right: 180px;
+            .handle{
+              margin-top: 20px;
+              text-align: center;
+            }
+          }
           .item{
             font-size: 12px;
             color: #262626;
             margin: 0 15px 0 0;
             cursor: pointer;
           }
+          button{
+            padding: 5px 10px;
+          }
+        }
+        .btn-group{
+          float: left;
+          width: 120px;
         }
       }
     }
@@ -214,6 +297,10 @@
 <style lang="less">
   .m-filter-area{
     .option {
+      .el-checkbox__label{
+        font-size: 12px;
+        color: #262626;
+      }
       .el-tabs--border-card{
         box-shadow: none;
         border-left: none;
