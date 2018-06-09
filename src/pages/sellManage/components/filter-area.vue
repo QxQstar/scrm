@@ -63,8 +63,28 @@
                   @click="chooseFilter([item],param.filed)">
                     {{item.label}}
                 </span>
-              </template>
 
+                <!--可以自定义时间-->
+                <span class="custome-time" v-if="param.filed === 'time'">
+                  <span>自定义</span>
+                  <span style="margin: 0 10px">
+                    <el-date-picker
+                      v-model="start_time"
+                      type="date"
+                      size="mini"
+                      placeholder="开始时间">
+                    </el-date-picker>
+                   <el-date-picker
+                     v-model="end_time"
+                     type="date"
+                     size="mini"
+                     placeholder="结束时间">
+                    </el-date-picker>
+                  </span>
+                  <el-button size="mini" v-if="end_time || start_time" @click="end_time='';start_time=''">清空</el-button>
+                  <el-button size="mini" v-if="end_time || start_time" @click="sureTime">确定</el-button>
+                </span>
+              </template>
               <!-- 多选 -->
               <template v-else>
                 <el-checkbox-group v-model="selectState[param.filed].opt">
@@ -132,7 +152,9 @@
           //高级选项中选中的项
           activeName:'-1',
           //筛选项的选择状态(单选/多选)
-          selectState:{}
+          selectState:{},
+          start_time:'',
+          end_time:''
         }
       },
       computed:{
@@ -185,6 +207,27 @@
         }
       },
       methods:{
+        //确定自定义时间
+        sureTime(){
+          if(this.end_time && this.start_time){
+            this.chooseFilter([{
+              value:'customer',
+              label:this.start_time + '-' + this.end_time
+            }],'time')
+          } else if(this.start_time){
+            this.chooseFilter([{
+              value:'customer',
+              label:this.start_time + '以后'
+            }],'time')
+          } else if(this.end_time){
+            this.chooseFilter([{
+              value:'customer',
+              label:this.end_time + '以前'
+            }],'time')
+          }
+          this.end_time = '';
+          this.start_time = '';
+        },
         changeActive(index,length){
           if(index * 1 + 1 < length){
             this.activeName = index + 1 + '';
