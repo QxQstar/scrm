@@ -75,7 +75,12 @@
           this.star = getStar();
           this.lifecycle = getLifecycle();
           this.tag = getTag();
-          this.follow = getFollow();
+          this.follow = this.$store.state.base.member_list.map(item => {
+            return {
+              label:item.member_name,
+              value:item.member_id
+            }
+          });
         }
       },
       created(){

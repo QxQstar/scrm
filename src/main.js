@@ -3,6 +3,8 @@
 import Vue from 'vue';
 import App from './App';
 import router from './router';
+import store from './store/index.js';
+import {member_list} from './dataCenter/global/index.js';
 
 //引入全局样式
 import './assets/css/global.less';
@@ -22,6 +24,10 @@ Vue.config.productionTip = false;
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  created(){
+    store.dispatch('base_member_list',member_list);
+  }
 });

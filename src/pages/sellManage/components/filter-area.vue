@@ -18,7 +18,8 @@
                          :name="index + ''"
                          :key="item.filed"
                          v-if="!filterParam.highFilter[item.filed]">
-              <span class="item" v-for="data in filterData[item.filed]" @click="chooseFilter([data],item.filed,true);changeActive(index,param.list.length)">
+              <span class="item" v-for="data in filterData[item.filed]"
+                    @click="chooseFilter([data],item.filed,true);changeActive(index,param.list.length)">
                 {{data.label}}
               </span>
             </el-tab-pane>
@@ -103,7 +104,7 @@
       data(){
         return{
           //高级选项中选中的项
-          activeName:'0',
+          activeName:'-1',
           selectState:{}
         }
       },
