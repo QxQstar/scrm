@@ -11,7 +11,7 @@
     <filter-area v-model="filterParam"
                  type='contact'
                  :config="{
-                    multiple:'star,lifecycle,tag'
+                    multiple:'star,lifecycle,tag,follow'
                   }"
                  :filterData="filterData"/>
   </div>

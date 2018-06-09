@@ -18,10 +18,34 @@
                          :name="index + ''"
                          :key="item.filed"
                          v-if="!filterParam.highFilter[item.filed]">
-              <span class="item" v-for="data in filterData[item.filed]"
-                    @click="chooseFilter([data],item.filed,true);changeActive(index,param.list.length)">
-                {{data.label}}
-              </span>
+              <div class="opt-list">
+                <!--单选-->
+                <template v-if="!(selectState[item.filed] || {}).state">
+                  <span class="item" v-for="data in filterData[item.filed]"
+                        @click="chooseFilter([data],item.filed,true);changeActive(index,param.list.length)">
+                    {{data.label}}
+                  </span>
+                </template>
+                <!--多选-->
+                <template v-else>
+                  <el-checkbox-group v-model="selectState[item.filed].opt">
+                    <el-checkbox :label="data.value"
+                                 :key="data.value"
+                                 v-for="data in filterData[item.filed]">{{data.label}}</el-checkbox>
+                  </el-checkbox-group>
+
+                  <div class="handle">
+                    <el-button size="mini" @click.native="changeSelectState(item.filed)">取消</el-button>
+                    <el-button size="mini" :disabled='selectState[item.filed].opt.length <= 0' @click.native="sureMultiple(item.filed,true)">确定</el-button>
+                  </div>
+                </template>
+              </div>
+
+              <!-- 切换成多选 -->
+              <div class="btn-group">
+                <el-button size="mini" v-if="config.multiple.indexOf(item.filed) > -1 && !selectState[item.filed].state"
+                           @click.native="changeSelectState(item.filed)">多选</el-button>
+              </div>
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -55,6 +79,8 @@
               </template>
 
             </div>
+
+            <!--切换成多选-->
             <div class="btn-group">
               <el-button size="mini" v-if="config.multiple.indexOf(param.filed) > -1 && !selectState[param.filed].state"
                          @click.native="changeSelectState(param.filed)">多选</el-button>
@@ -87,7 +113,7 @@
             return {}
           }
         },
-        //筛选项
+        //筛选备选项
         filterData:{
           type:Object,
           default(){
@@ -105,6 +131,7 @@
         return{
           //高级选项中选中的项
           activeName:'-1',
+          //筛选项的选择状态(单选/多选)
           selectState:{}
         }
       },
@@ -130,6 +157,7 @@
           const is_object = (data) => {
             return Object.prototype.toString.call(data) === "[object Object]";
           };
+          //用已选的选项生成一个平铺的一维数组
           const result = [], fn = (obj,is_higher = false) => {
             const keys = Object.keys(obj),len = keys.length;
             for(let i = 0; i < len ; i++){
@@ -195,11 +223,11 @@
           this.selectState[filed].state = !this.selectState[filed].state;
         },
         //确定多选
-        sureMultiple(filed){
+        sureMultiple(filed,is_higher){
           const opt = this.selectState[filed].opt.map(value => {
-            return this.filterData[filed].find(item => item.value * 1 === value * 1);
+            return this.filterData[filed].find(item => item.value + '' === value  + '');
           });
-          this.chooseFilter(opt,filed);
+          this.chooseFilter(opt,filed,is_higher);
           this.changeSelectState(filed);
         }
       },
@@ -212,6 +240,23 @@
 <style lang="less" scoped>
   .m-filter-area{
     background-color: #ffffff;
+    .opt-list{
+      float: left;
+      width: 100%;
+      margin-right: -150px;
+      padding-right: 180px;
+      .handle{
+        margin-top: 20px;
+        text-align: center;
+      }
+    }
+    .btn-group{
+      float: left;
+      width: 120px;
+    }
+    button{
+      padding: 5px 10px;
+    }
     .select-filter{
       background-color: rgb(242,245,250);
       padding-bottom: 5px;
@@ -251,29 +296,12 @@
           color: #8899a6;
         }
         .option{
-          .opt-list{
-            float: left;
-            width: 100%;
-            margin-right: -150px;
-            padding-right: 180px;
-            .handle{
-              margin-top: 20px;
-              text-align: center;
-            }
-          }
           .item{
             font-size: 12px;
             color: #262626;
             margin: 0 15px 0 0;
             cursor: pointer;
           }
-          button{
-            padding: 5px 10px;
-          }
-        }
-        .btn-group{
-          float: left;
-          width: 120px;
         }
       }
     }
