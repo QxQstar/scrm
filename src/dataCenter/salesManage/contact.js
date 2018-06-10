@@ -115,3 +115,7 @@ export function getTag(){
 export function getFollow(){
   return follow;
 }
+
+export function getContact(param){
+
+}

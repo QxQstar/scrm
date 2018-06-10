@@ -1,25 +1,33 @@
 <template>
   <div class="m-sellManage-list">
-    <div class="m-header-top">
-      <span class="info">共有{{total}}为联系人</span>
-      <div class="f-fr">
-        <el-input v-model="keyword"  size='mini' placeholder="关键字"/>
-        <el-button size="mini">新增联系人</el-button>
+    <div v-show="!loading">
+      <div class="m-header-top">
+        <span class="info">共有{{total}}为联系人</span>
+        <div class="f-fr">
+          <el-input v-model="keyword"  size='mini' placeholder="关键字"/>
+          <el-button size="mini">新增联系人</el-button>
+        </div>
       </div>
-    </div>
-    <!--筛选区域-->
-    <filter-area v-model="filterParam"
-                 type='contact'
-                 :config="{
+      <!--筛选区域-->
+      <filter-area v-model="filterParam"
+                   type='contact'
+                   :config="{
                     multiple:'star,lifecycle,tag,follow'
                   }"
-                 :filterData="filterData"/>
+                   @on-update="fetchData"
+                   :filterData="filterData"/>
+    </div>
+    <go-loading v-show="loading"/>
+
+
+
   </div>
 </template>
 
 <script>
     import filterArea from './../components/filter-area.vue';
-    import {getTime,getStar,getLifecycle,getTag,getFollow} from '@/dataCenter/salesManage/contact.js';
+    import {getTime,getStar,getLifecycle,getTag,getFollow,getContact} from '@/dataCenter/salesManage/contact.js';
+    import GoLoading from "../../../components/common/go-loading";
     export default {
       data(){
         return {
@@ -43,7 +51,8 @@
           star:'',
           lifecycle:'',
           tag:'',
-          follow:''
+          follow:'',
+          loading:false
         }
       },
       computed:{
@@ -68,9 +77,11 @@
           }
         }
       },
-      components:{filterArea},
+      components:{
+        GoLoading,
+        filterArea},
       methods:{
-        getData(){
+        getFilterData(){
           this.time = getTime();
           this.star = getStar();
           this.lifecycle = getLifecycle();
@@ -81,10 +92,23 @@
               value:item.member_id
             }
           });
+        },
+        fetchData(filterParam){
+          this.loading = true;
+          const param = {
+            time:JSON.stringify(filterParam.time || []),
+            star:JSON.stringify(filterParam.star || []),
+            lifecycle:JSON.stringify(filterParam.lifecycle || []),
+            country:JSON.stringify(filterParam.highFilter.country || []),
+            workTime:JSON.stringify(filterParam.highFilter.workTime || []),
+            follow:JSON.stringify(filterParam.highFilter.follow || []),
+          };
+          getContact(param)
         }
       },
       created(){
-        this.getData();
+        this.getFilterData();
+        this.fetchData(this.filterParam);
       }
     }
 </script>

@@ -257,6 +257,7 @@
           }
 
           this.$emit('on-change',this.filterParam);
+          this.$emit('on-update',this.filterParam);
         },
         showFilterItem(){
           const highFilter = this.filterParam.highFilter,keys = Object.keys(highFilter);

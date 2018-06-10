@@ -18,6 +18,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 //注册全局组件
 import './components/common/index.js';
+import './global/muse-ui.js';
 
 Vue.config.productionTip = false;
 /* eslint-disable no-new */
