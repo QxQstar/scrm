@@ -113,10 +113,9 @@
 </template>
 
 <script>
-    import ElButton from "element-ui/packages/button/src/button";
+    import {dateToStr,strtoUnix} from '@/global/util.js';
 
     export default {
-      components: {ElButton},
       model: {
         prop: 'filterParam',
         event: 'on-change'
@@ -212,17 +211,20 @@
           if(this.end_time && this.start_time){
             this.chooseFilter([{
               value:'customer',
-              label:this.start_time + '-' + this.end_time
+              time:strtoUnix(dateToStr(this.start_time) ,true) + ',' + (strtoUnix(dateToStr(this.end_time) ,true) + 86399),
+              label:dateToStr(this.start_time) + '-' + dateToStr(this.end_time)
             }],'time')
           } else if(this.start_time){
             this.chooseFilter([{
               value:'customer',
-              label:this.start_time + '以后'
+              time:strtoUnix(dateToStr(this.start_time) ,true) + ',',
+              label:dateToStr(this.start_time) + ' 以后'
             }],'time')
           } else if(this.end_time){
             this.chooseFilter([{
               value:'customer',
-              label:this.end_time + '以前'
+              time:',' + (strtoUnix(dateToStr(this.end_time) ,true) + 86399),
+              label:dateToStr(this.end_time) + ' 以前'
             }],'time')
           }
           this.end_time = '';
