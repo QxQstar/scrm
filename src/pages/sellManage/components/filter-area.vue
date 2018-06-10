@@ -114,6 +114,7 @@
 
 <script>
     import {dateToStr,strtoUnix} from '@/global/util.js';
+    import {getTime} from './../util.js';
 
     export default {
       model: {
@@ -193,7 +194,18 @@
                     showValue:[]
                   };
                   item.forEach(data => {
-                    filterItem.showValue.push(data.label);
+                    //如果是时间要根据现在的时间计算出需要显示的具体时间段
+                    if(key === 'time'){
+                      switch(data.value * 1){
+                        case 0:
+                          filterItem.showValue.push(data.label);
+                          break;
+                        default:
+                          filterItem.showValue.push(getTime(data.value));
+                      }
+                    } else {
+                      filterItem.showValue.push(data.label);
+                    }
                   });
                   filterItem.showValue = filterItem.showValue.join(',');
                   result.push(filterItem);
@@ -210,21 +222,21 @@
         sureTime(){
           if(this.end_time && this.start_time){
             this.chooseFilter([{
-              value:'customer',
+              value:0,
               time:strtoUnix(dateToStr(this.start_time) ,true) + ',' + (strtoUnix(dateToStr(this.end_time) ,true) + 86399),
-              label:dateToStr(this.start_time) + '-' + dateToStr(this.end_time)
+              label:dateToStr(this.start_time,'yyyy.MM.dd') + '-' + dateToStr(this.end_time,'yyyy.MM.dd')
             }],'time')
           } else if(this.start_time){
             this.chooseFilter([{
-              value:'customer',
+              value:0,
               time:strtoUnix(dateToStr(this.start_time) ,true) + ',',
-              label:dateToStr(this.start_time) + ' 以后'
+              label:dateToStr(this.start_time,'yyyy.MM.dd') + ' 以后'
             }],'time')
           } else if(this.end_time){
             this.chooseFilter([{
-              value:'customer',
+              value:0,
               time:',' + (strtoUnix(dateToStr(this.end_time) ,true) + 86399),
-              label:dateToStr(this.end_time) + ' 以前'
+              label:dateToStr(this.end_time,'yyyy.MM.dd') + ' 以前'
             }],'time')
           }
           this.end_time = '';

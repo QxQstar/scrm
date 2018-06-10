@@ -1,6 +1,6 @@
 const time = [
   {
-    label:'近三天',
+    label:'0-3天',
     value:1
   },
   {

@@ -41,3 +41,10 @@ export function strtoUnix(str,is_start){
     return datetoUnix(date);
   }
 }
+
+export function unixtoStr(unix,format){
+  unix = unix * 1000;
+  if(!unix) return '';
+  const date = new Date(unix);
+  return dateToStr(date,format);
+}
