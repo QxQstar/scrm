@@ -16,6 +16,39 @@
                   }"
                    @on-update="fetchData"
                    :filterData="filterData"/>
+
+    <!--列表-->
+      <div class="btn-handle">
+        <el-button size="mini" type="primary" class="f-fr">自定义表头</el-button>
+      </div>
+      <go-fix-height v-model="tb_height" :config="{cls:['.m-header-top','.m-filter-area','.btn-handle']}"style="display: none"/>
+      <el-table
+        :key="tb_height"
+        :data="tb_data"
+        :max-height="tb_height"
+        style="width: 100%">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          label="日期"
+          width="180">
+          <template slot-scope="scope">
+            <i class="el-icon-time"></i>
+            <span style="margin-left: 10px">{{ scope.row.date }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="基本信息">
+          <template slot-scope="scope">
+            <i class="el-icon-time"></i>
+            <span style="margin-left: 10px">{{ scope.row.date }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+
+
     </div>
     <go-loading v-show="loading"/>
 
@@ -27,13 +60,18 @@
 <script>
     import filterArea from './../components/filter-area.vue';
     import {getTime,getStar,getLifecycle,getTag,getFollow,getContact} from '@/dataCenter/salesManage/contact.js';
-    import GoLoading from "../../../components/common/go-loading";
     export default {
       data(){
         return {
           //联系人总数
           total:0,
-          tb_data:[],
+          tb_data:[{
+            date:'222'
+          },
+            {
+              date:'222rrr'
+            }],
+          tb_height:0,
           keyword:'',
           //筛选参数
           filterParam:{
@@ -77,9 +115,7 @@
           }
         }
       },
-      components:{
-        GoLoading,
-        filterArea},
+      components:{filterArea},
       methods:{
         getFilterData(){
           this.time = getTime();
@@ -94,7 +130,7 @@
           });
         },
         fetchData(filterParam){
-          this.loading = true;
+          this.loading = false;
           const param = {
             time:JSON.stringify(filterParam.time || []),
             star:JSON.stringify(filterParam.star || []),
@@ -127,6 +163,11 @@
         color: #8899a6;
         vertical-align: middle;
       }
+    }
+    .btn-handle{
+      overflow: hidden;
+      padding: 10px;
+
     }
   }
 </style>

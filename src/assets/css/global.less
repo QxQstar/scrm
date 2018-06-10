@@ -10,14 +10,39 @@ html,body,#app{
     display: inline-block;
     width: auto;
   }
-  .el-button:hover{
-    background-color: #fff;
-  }
 
   //表单
   .el-checkbox{
     margin-right: 30px;
     margin-left: 0;
+  }
+
+//  表格
+  .el-table{
+    border: 1px solid #c4d7e0;
+    border-radius: 4px;
+    background-color: transparent;
+    &.el-table--enable-row-hover .el-table__body tr:hover>td{
+      background-color: #c7efeb;
+    }
+    td,th.is-leaf{
+      border-bottom: 1px solid #c4d7e0;
+    }
+    .el-table__header-wrapper{
+      tr,th{
+        background-color: transparent;
+      }
+    }
+    th.is-leaf{
+      .cell{
+        font-size: 12px;
+        color: #262626;
+        font-weight: normal;
+      }
+    }
+    td,th{
+      padding: 8px;
+    }
   }
 }
 .f-clear:after{
