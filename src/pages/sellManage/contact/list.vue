@@ -52,14 +52,12 @@
     </div>
     <go-loading v-show="loading"/>
 
-
-
   </div>
 </template>
 
 <script>
     import filterArea from './../components/filter-area.vue';
-    import {getTime,getStar,getLifecycle,getTag,getFollow,getContact} from '@/dataCenter/salesManage/contact.js';
+    import {getTime,getStar,getLifecycle,getTag,getContact} from '@/dataCenter/salesManage/contact.js';
     export default {
       data(){
         return {
