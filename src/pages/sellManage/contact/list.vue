@@ -32,18 +32,12 @@
           width="55">
         </el-table-column>
         <el-table-column
-          label="日期"
+          :label="col.name"
+          v-for="col,index in tb_col"
+          :key="index"
           width="180">
           <template slot-scope="scope">
-            <i class="el-icon-time"></i>
-            <span style="margin-left: 10px">{{ scope.row.date }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="基本信息">
-          <template slot-scope="scope">
-            <i class="el-icon-time"></i>
-            <span style="margin-left: 10px">{{ scope.row.date }}</span>
+           <show-filed :data="scope.row" :filed="col.key"/>
           </template>
         </el-table-column>
       </el-table>
@@ -57,18 +51,16 @@
 
 <script>
     import filterArea from './../components/filter-area.vue';
-    import {getTime,getStar,getLifecycle,getTag,getContact} from '@/dataCenter/salesManage/contact.js';
+    import showFiled from './showFiled.vue';
+    import {getTime,getStar,getLifecycle,getTag,getContact,getTabCols} from '@/dataCenter/salesManage/contact.js';
+
     export default {
       data(){
         return {
           //联系人总数
           total:0,
-          tb_data:[{
-            date:'222'
-          },
-            {
-              date:'222rrr'
-            }],
+          tb_data:[],
+          tb_col:[],
           tb_height:0,
           keyword:'',
           //筛选参数
@@ -113,7 +105,7 @@
           }
         }
       },
-      components:{filterArea},
+      components:{filterArea,showFiled},
       methods:{
         getFilterData(){
           this.time = getTime();
@@ -137,12 +129,31 @@
             workTime:JSON.stringify(filterParam.highFilter.workTime || []),
             follow:JSON.stringify(filterParam.highFilter.follow || []),
           };
-          getContact(param)
+          const resData = getContact(param);
+          this.tb_data = resData.data || [];
+          this.total = resData.data.length;
+        },
+        //获取表头
+        getCols(){
+          const cols = getTabCols();
+          this.tb_col.push({
+            key:'my_base_msg',
+            name:'基本信息'
+          },{
+            key:'contact_methods',
+            name:'联系方式'
+          });
+          cols.forEach(col => {
+            if('first_name,last_name,customer,position,email,phone,mobile'.indexOf(col.key) < 0){
+              this.tb_col.push(col);
+            }
+          })
         }
       },
       created(){
         this.getFilterData();
         this.fetchData(this.filterParam);
+        this.getCols();
       }
     }
 </script>

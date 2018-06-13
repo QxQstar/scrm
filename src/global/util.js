@@ -31,7 +31,7 @@ export function dateToStr(date=new Date(),format = 'yyyy-MM-dd'){
 export function datetoUnix(date=new Date()){
   return Math.floor(date.getTime() / 1000);
 }
-
+//时间字符串转unix
 export function strtoUnix(str,is_start){
   const date = new Date(str);
   if(is_start){
@@ -41,7 +41,7 @@ export function strtoUnix(str,is_start){
     return datetoUnix(date);
   }
 }
-
+//unix转时间字符串
 export function unixtoStr(unix,format){
   unix = unix * 1000;
   if(!unix) return '';

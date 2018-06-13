@@ -105,6 +105,7 @@ const contact = [
     country:'中国',
     region:'亚洲',
     city:'北京',
+    avator:'',
     street:'阿凡达和街',
     postcode:123456,
     my_level:3,
@@ -140,8 +141,15 @@ const contact = [
     transfer_time:0,
     transfer_days:0,
     follow_member:1,
-    last_contact_time:1528224400,
-    last_active_time:1528224400,
+    last_contact_time:{
+      time:1528224400,
+      type:1,// 1:普通邮件，2：营销邮件，3：社交媒体互动，4：博客互动，5：网站在线聊天
+    },
+    last_active_time:{
+      time:1528224400,
+      icon:'',
+      label:'在Facebook上发表博客'
+    },
     from:[
       {
         value:2,
@@ -162,6 +170,7 @@ const contact = [
     customer:''
   }
 ];
+//所有的联系人字段
 const all_cols = [
   {
     key:'sex',
@@ -268,13 +277,12 @@ const all_cols = [
     name:'网站访问来源'
   },
   {
-    key:'avator',
-    name:'头像'
+    key:'first_name',
+    name:'姓'
   },
   {
-    key:'name',
-    name:'姓名',
-    sortable:true
+    key:'last_name',
+    name:'名'
   },
   {
     key:'customer',
@@ -325,11 +333,8 @@ const all_cols = [
     name:'跟进人'
   }
 ];
+//要在列表中显示的联系人字段
 const tab_cols = [
-  {
-    key:'avator',
-    name:'头像'
-  },
   {
     key:'name',
     name:'姓名',
@@ -370,6 +375,10 @@ const tab_cols = [
   {
     key:'tags',
     name:'标签'
+  },
+  {
+    key:'create_time',
+    name:'创建时间'
   },
   {
     key:'last_active_time',
@@ -396,7 +405,11 @@ export function getLifecycle(){
 export function getTag(){
   return tag;
 }
-
+export function getTabCols(){
+  return tab_cols;
+}
 export function getContact(param){
-  return contact
+  return {
+    data:contact
+  }
 }
