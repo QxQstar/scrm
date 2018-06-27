@@ -1,10 +1,33 @@
 <template>
-  <div class="m-home">home</div>
+  <div class="m-home">
+    <line-chart :option='option' style="height: 200px;width: 200px"/>
+  </div>
 </template>
 
 <script>
+  import lineChart from '@/components/charts/line-chart.vue';
     export default {
-        name: "home"
+        name: "home",
+      components:{lineChart},
+      data(){
+        return {
+          option:{
+            title: {
+              text: 'ECharts 入门示例'
+            },
+            tooltip: {},
+            xAxis: {
+              data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+            },
+            yAxis: {},
+            series: [{
+              name: '销量',
+              type: 'bar',
+              data: [5, 20, 36, 10, 10, 20]
+            }]
+          }
+        }
+      }
     }
 </script>
 
